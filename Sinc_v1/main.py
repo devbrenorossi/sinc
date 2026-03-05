@@ -6,7 +6,7 @@ def limpartela():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 # variavel estoque armazena os produtos.
-estoque = {}
+ESTOQUE = {}
 # proximo_id variavel para sempre mostrar um ID nos produtos e nunca repetir.
 proximo_id = 1
 
@@ -48,24 +48,24 @@ while True:
     if escolha == 1:
         try:
             nome_produto = input("Digite o nome do produto: ").title()
-            produto_exite = False
+            produto_existe = False
             # verifica se o produto existe em estoque, se existir avisa que ja tem cadastrado.
-            for dado in estoque.values():
+            for dado in ESTOQUE.values():
                 if dado["nome"] == nome_produto:
                     print('este produto ja esta cadastrado.')
                     print('Precione ENTER para sair...')
                     input()
                     limpartela()
 
-                    produto_exite = True
+                    produto_existe = True
                     break
 
-            if produto_exite:
+            if produto_existe:
                 continue
 
             # se nao existir o programa continua.
             quantidade_produto = int(input("Digite a quantidade do produto: "))
-            estoque[proximo_id] = {
+            ESTOQUE[proximo_id] = {
                     "nome": nome_produto, 
                     "quantidade": quantidade_produto
                 }
@@ -91,7 +91,7 @@ while True:
     elif escolha == 2:
 
         # se nao tiver produto cadastrado ele informa.
-        if not estoque:
+        if not ESTOQUE:
             print('lista vazia, adicione produtos para conseguir vizualizar.')
             print('Precione ENTER para sair...')
             input()
@@ -99,7 +99,7 @@ while True:
 
         # se tiver ele mostra na tela.
         else:
-            for id, dados in estoque.items():
+            for id, dados in ESTOQUE.items():
                 print(f'{id} - "nome": {dados["nome"]} - "quantidade": {dados["quantidade"]}')
             print('Precione ENTER para sair...')
             input()
@@ -112,7 +112,7 @@ while True:
             limpartela()
         
             # Se o ID nao existir
-            if id_produto not in estoque:
+            if id_produto not in ESTOQUE:
                 print('ID nao encontrado....')
                 print('Precione ENTER para sair...')
                 input()
@@ -127,9 +127,9 @@ while True:
 
         # Atualiza o ID informado
         else:
-            estoque[id_produto]["nome"] = input('Digite novo nome: ').title()
+            ESTOQUE[id_produto]["nome"] = input('Digite novo nome: ').title()
             try:
-                estoque[id_produto]["quantidade"] = int(input('Digite a nova quantidade: '))
+                ESTOQUE[id_produto]["quantidade"] = int(input('Digite a nova quantidade: '))
 
                 print('produto atualizado com sucesso....')
                 print('Precione ENTER para sair...')
@@ -145,7 +145,7 @@ while True:
     elif escolha == 4:
 
         # se estoque vazio
-        if not estoque:
+        if not ESTOQUE:
             print('estoque vazio, adicione produtos..')
             print('Precione ENTER para sair...')
             input()
@@ -154,10 +154,10 @@ while True:
         else:
             id_produto = int(input('digite o ID do produto a remover. '))
             
-            if id_produto in estoque:
-                nome_removido = estoque[id_produto]["nome"]
+            if id_produto in ESTOQUE:
+                nome_removido = ESTOQUE[id_produto]["nome"]
 
-                del estoque[id_produto]
+                del ESTOQUE[id_produto]
 
                 print(f'{nome_removido}, Removido com sucesso....')
                 print('Precione ENTER para sair...')
