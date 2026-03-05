@@ -27,7 +27,6 @@ while True:
 05 - Sair do Programa.
                             
 O que deseja fazer: '''))
-        print("=-"*12)
         limpartela()
         if escolha <= 0 or escolha >= 6:
             print("digite de 1 a 5")
