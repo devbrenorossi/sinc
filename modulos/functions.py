@@ -1,53 +1,118 @@
-import os
-from time import sleep
+import modulos.utils as fun
 
-
-def limpartela():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-def saudacao():
-    print("=-"*12)
-    print("   Bem vindo ao Sinc")
-    print("=-"*12)
-    sleep(0.5)
-
-def print_opcoes():
-    print('''01 - Cadastrar Produto.
-02 - Listar Produtos.
-03 - Atualizar Produto.
-04 - Remover Produtos.
-05 - Sair do Programa.''')
-    print("=-"*12)
 
 def cadastrar_produto(ESTOQUE, proximo_id):
     try:
         nome_produto = input("Digite o nome do produto: ").title()
 
-        for lista_nome in ESTOQUE.values():
-            if lista_nome["nome"] == nome_produto:
+        for produto in ESTOQUE.values():
+            if produto["nome"] == nome_produto:
                 print('este produto ja esta cadastrado.')
-                print('Precione ENTER para sair...')
+                print('Pressione ENTER para sair...')
                 input()
-                limpartela()
+                fun.limpartela()
+                return proximo_id
             
         quantidade_produto = int(input("Digite a quantidade de produto: "))
         ESTOQUE[proximo_id] = {
     "nome": nome_produto,
     "quantidade": quantidade_produto
-        }
-        print(f"{nome_produto} - {quantidade_produto}, adicionado com sucesso")
-        print('Precione ENTER para sair...')
-        input()
-        limpartela()
+}
+        
+        listar_produto(ESTOQUE)
 
     except ValueError:
         print('Digite somente numeros...')
         print('Precione ENTER para sair...')
         input()
-        limpartela()
+        fun.limpartela()
         
     return proximo_id + 1
 
 
+def listar_produto(ESTOQUE):
+    if not ESTOQUE:
+        print('lista vazia, adicione produtos para conseguir vizualizar.')
+        print('Precione ENTER para sair...')
+        input()
+        fun.limpartela()
+
+        # se tiver ele mostra na tela.
+    else:
+        for id, dados in ESTOQUE.items():
+            print(f'ID = {id} | "nome": {dados["nome"]} | "quantidade": {dados["quantidade"]}')
+        print('Precione ENTER para sair...')
+        input()
+        fun.limpartela()
+
+
+def atualizar_produto(ESTOQUE):
+    for id, dados in ESTOQUE.items():
+            print(f'ID = {id} | "nome": {dados["nome"]} | "quantidade": {dados["quantidade"]}')
+    try:
+        id_produto = int(input('Digite o ID do produto para atualizar: '))
+        # limpartela()
+        
+    except ValueError:
+        print("digite somente numeros.")
+        print('Precione ENTER para sair...')
+        input()
+        fun.limpartela()
+        return
+
+            # Se o ID nao existir
+    if id_produto not in ESTOQUE:
+        print('ID nao encontrado....')
+        print('Precione ENTER para sair...')
+        input()
+        fun.limpartela()
+        return
+            
+
+
+        # Atualiza o ID informado
+    else:
+        ESTOQUE[id_produto]["nome"] = input('Digite novo nome: ').title()
+        try:
+            ESTOQUE[id_produto]["quantidade"] = int(input('Digite a nova quantidade: '))
+            print('produto atualizado com sucesso....')
+            print('Precione ENTER para sair...')
+            input()
+            fun.limpartela()
+            
+            
+        except ValueError:
+            print("digite somente numeros.")
+            print('Precione ENTER para sair...')
+            input()
+
+
+def remover_produto(ESTOQUE):
+    for id, dados in ESTOQUE.items():
+            print(f'ID = {id} | "nome": {dados["nome"]} | "quantidade": {dados["quantidade"]}')
+        # se estoque vazio
+    if not ESTOQUE:
+        print('estoque vazio, adicione produtos..')
+        print('Precione ENTER para sair...')
+        input()
     
+        # se tiver produto aqui ele remove.
+    else:
+        id_produto = int(input('digite o ID do produto a remover. '))
+        
+        if id_produto in ESTOQUE:
+            nome_removido = ESTOQUE[id_produto]["nome"]
+
+            del ESTOQUE[id_produto]                
+
+            print(f'{nome_removido}, Removido com sucesso....')
+            print('Precione ENTER para sair...')
+            input()
+            fun.limpartela()
+
+        # se nao encontrar produto
+        else:
+            print('Produto nao encontrado....')
+            print('Precione ENTER para sair...')
+            input()
+
