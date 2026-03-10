@@ -1,4 +1,13 @@
-# Sinc
-## Meu primeiro projeto.
+# Sistema de Estoque
 
-Estou criando meu primeiro projeto baseado no sistema que utilizei em um dos meus empregos.
+Projeto simples em Python para gerenciamento de estoque.
+
+## Funcionalidades
+- Cadastrar produto
+- Listar produtos
+- Atualizar produto
+- Remover produto
+
+## Como executar
+
+python main.py
