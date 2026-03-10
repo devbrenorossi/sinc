@@ -21,7 +21,7 @@ while True:
         # variavel escolha armazena a escolha do usuario.
         escolha = int(input('O que deseja fazer? '))
         limpartela()
-        if escolha <= 0 or escolha >= 6:
+        if escolha not in range(1,6):
             print("digite de 1 a 5")
             sleep(2.5)
             limpartela()
