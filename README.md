@@ -1,5 +1,13 @@
-# Sinc
+# Sistema de Estoque
 
-## iniciando um grande projeto
+Projeto simples em Python para gerenciamento de estoque.
 
-Carregando ...
+## Funcionalidades
+- Cadastrar produto
+- Listar produtos
+- Atualizar produto
+- Remover produto
+
+## Como executar
+
+python main.py

@@ -1,118 +1,179 @@
+# Arquivo responsável pelas funções de CRUD do sistema de estoque.
+# CRUD = Create, Read, Update, Delete (Cadastrar, Listar, Atualizar, Remover)
+
 import modulos.utils as fun
+from database import salvar
 
 
-def cadastrar_produto(ESTOQUE, proximo_id):
+def cadastrar_produto(database):
+    """
+    Cadastra um novo produto no banco de dados. (Json)
+
+    Parâmetros:
+        database (dict): estrutura que contém os produtos e o próximo ID disponível.
+    """
     try:
-        nome_produto = input("Digite o nome do produto: ").title()
-
-        for produto in ESTOQUE.values():
+        # Solicita o nome do produto e padroniza para maiúsculo
+        nome_produto = input("Digite o nome do produto: ").upper()
+        # verifica se ja existe um produto com o mesmo nome
+        for produto in database["produtos"].values():
             if produto["nome"] == nome_produto:
                 print('este produto ja esta cadastrado.')
                 print('Pressione ENTER para sair...')
                 input()
                 fun.limpartela()
-                return proximo_id
-            
+                return
+        # solicita a quantidade do produto
         quantidade_produto = int(input("Digite a quantidade de produto: "))
-        ESTOQUE[proximo_id] = {
+
+        # gera automaticamente o ID usando o contador do banco
+        id_produto = str(database["proximo_id"])
+        
+        # adiciona o novo produto no dicionario de produtos
+        database["produtos"][id_produto] = {
     "nome": nome_produto,
     "quantidade": quantidade_produto
 }
-        
-        listar_produto(ESTOQUE)
+        # atualiza o contador para o proximo produto
+        database["proximo_id"] += 1
 
+        # salva as alteracoes no arquivo (JSON)
+        salvar(database)
+
+    # tratamento de erro caso o usuario digite algo que nao seja numero.
     except ValueError:
         print('Digite somente numeros...')
         print('Precione ENTER para sair...')
         input()
         fun.limpartela()
         
-    return proximo_id + 1
+    return
 
 
-def listar_produto(ESTOQUE):
-    if not ESTOQUE:
+def listar_produto(database):
+    """
+    Lista todos os produtos cadastrados no estoque.
+    """
+    # Acessa o dicionario de produtos dentro do database
+    produtos = database["produtos"]
+
+    # verifica se existe algum produto cadastrado
+    if not produtos:
         print('lista vazia, adicione produtos para conseguir vizualizar.')
-        print('Precione ENTER para sair...')
-        input()
-        fun.limpartela()
-
-        # se tiver ele mostra na tela.
-    else:
-        for id, dados in ESTOQUE.items():
-            print(f'ID = {id} | "nome": {dados["nome"]} | "quantidade": {dados["quantidade"]}')
-        print('Precione ENTER para sair...')
-        input()
-        fun.limpartela()
-
-
-def atualizar_produto(ESTOQUE):
-    for id, dados in ESTOQUE.items():
-            print(f'ID = {id} | "nome": {dados["nome"]} | "quantidade": {dados["quantidade"]}')
-    try:
-        id_produto = int(input('Digite o ID do produto para atualizar: '))
-        # limpartela()
-        
-    except ValueError:
-        print("digite somente numeros.")
         print('Precione ENTER para sair...')
         input()
         fun.limpartela()
         return
 
-            # Se o ID nao existir
-    if id_produto not in ESTOQUE:
+    # percorre todos os produtos e mostra na tela
+    for id_produto, produto in produtos.items():
+        print(f'ID: {id_produto} | Nome: {produto["nome"]} | Quantidade: {produto["quantidade"]}')
+    print('Precione ENTER para sair...')
+    input()
+    fun.limpartela()
+
+
+def atualizar_produto(database):
+    """
+    Atualiza as informacoes de um produto existente.
+    """
+    produtos = database["produtos"]
+
+    # mostra todos os produtos antes de pedir o ID
+    for id_produto, produto in produtos.items():
+            print(f'ID: {id_produto} | Nome: {produto["nome"]} | Quantidade: {produto["quantidade"]}')
+
+    # solicita o ID do produto que sera atualizado
+    id_produto = input('Digite o ID do produto para atualizar: ')
+    fun.limpartela()
+
+    # verifica se existem produtos cadastrados
+    if not produtos:
+        print("Nenhum produto cadastrado....")
+        print('Precione ENTER para sair...')
+        input()
+        fun.limpartela()
+        return
+
+    # verifica se o ID digitado existe
+    if  id_produto not in produtos:
         print('ID nao encontrado....')
         print('Precione ENTER para sair...')
         input()
         fun.limpartela()
         return
-            
-
-
-        # Atualiza o ID informado
-    else:
-        ESTOQUE[id_produto]["nome"] = input('Digite novo nome: ').title()
-        try:
-            ESTOQUE[id_produto]["quantidade"] = int(input('Digite a nova quantidade: '))
-            print('produto atualizado com sucesso....')
-            print('Precione ENTER para sair...')
+        
+    # solicita o novo nome do produto
+    novo_produto = input('Digite novo nome: ').upper()
+    
+    # verifica se ja existe outro produto com esse nome
+    for produto in produtos.values():
+        if produto["nome"] == novo_produto:
+            print('este produto ja esta cadastrado.')
+            print('Pressione ENTER para sair...')
             input()
             fun.limpartela()
-            
-            
-        except ValueError:
-            print("digite somente numeros.")
-            print('Precione ENTER para sair...')
-            input()
-
-
-def remover_produto(ESTOQUE):
-    for id, dados in ESTOQUE.items():
-            print(f'ID = {id} | "nome": {dados["nome"]} | "quantidade": {dados["quantidade"]}')
-        # se estoque vazio
-    if not ESTOQUE:
-        print('estoque vazio, adicione produtos..')
+            return
+        
+    # atualiza o nome do produto
+    produtos[id_produto]["nome"] = novo_produto
+    
+    try:
+        # atualiza a quantidade de produto.
+        produtos[id_produto]["quantidade"] = int(input('Digite a nova quantidade: '))
+        print('produto atualizado com sucesso....')
         print('Precione ENTER para sair...')
         input()
-    
-        # se tiver produto aqui ele remove.
-    else:
-        id_produto = int(input('digite o ID do produto a remover. '))
+        fun.limpartela()
         
-        if id_produto in ESTOQUE:
-            nome_removido = ESTOQUE[id_produto]["nome"]
+    # tratamento caso o usuario digite texto na quantidade
+    except ValueError:
+        print("digite somente numeros.")
+        print('Precione ENTER para sair...')
+        input()
+    # salva as alteracoes no arquivo
+    salvar(database)
 
-            del ESTOQUE[id_produto]                
 
-            print(f'{nome_removido}, Removido com sucesso....')
-            print('Precione ENTER para sair...')
-            input()
-            fun.limpartela()
+def remover_produto(database):
+    """
+    Remove um produto do estoque usando o ID
+    """
 
-        # se nao encontrar produto
-        else:
-            print('Produto nao encontrado....')
-            print('Precione ENTER para sair...')
-            input()
+    produtos = database["produtos"]
+
+    # Mostra todos os produtos disponíveis
+    for id, dados in produtos.items():
+            print(f'ID = {id} | "nome": {dados["nome"]} | "quantidade": {dados["quantidade"]}')
+
+    # verifica se o estoque esta vazio
+    if not produtos:
+        print('lista vazio, adicione produtos..')
+        print('Precione ENTER para sair...')
+        input()
+
+    # solicita o ID do produto a ser removido
+    id_produto = input('digite o ID do produto a remover. ')
+    
+    # verifica se o ID existe
+    if id_produto in produtos:
+        # guarda o nome antes de remover para mostrar msg
+        nome_removido = produtos[id_produto]["nome"]
+
+        # remove o produto do discionario
+        del produtos[id_produto]
+
+        print(f'{nome_removido}, Removido com sucesso....')
+        print('Precione ENTER para sair...')
+        input()
+        fun.limpartela()
+
+    # caso o id nao seja encontrado
+    else:
+        print('Produto nao encontrado....')
+        print('Precione ENTER para sair...')
+        input()
+     
+    # salva o banco apos a remocao
+    salvar(database)
 
