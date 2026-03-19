@@ -1,0 +1,9 @@
+{
+    "proximo_id": 3,
+    "produtos": {
+        "1": {
+            "nome": "ARROZ",
+            "quantidade": 2.0
+        }
+    }
+}

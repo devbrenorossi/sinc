@@ -4,7 +4,7 @@
 
 import os
 from time import sleep
-
+import json
 
 def limpartela():
     """
@@ -39,6 +39,14 @@ def print_opcoes():
 05 - Sair do Programa.''')
     print("=-"*12)
 
+def mostrar_produto():
+    with open("data/estoque.json", "r", encoding="utf-8") as f:
+        dados = json.load(f)
+
+    produtos = dados["produtos"]
+
+    for id_produto, produto in produtos.items():
+        print(f'ID: {id_produto} | Nome: {produto["nome"]} | Quantidade: {produto["quantidade"]}')
 
 def final_programa():
     
@@ -48,6 +56,4 @@ def final_programa():
     print("=-"*21)
     print(" Sinc versão 1.0 criado por Breno Rossi ")
     print("=-"*21)
-    # Aguarda alguns segundos antes de fechar o programa
-    sleep(3)
 

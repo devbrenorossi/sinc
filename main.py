@@ -1,13 +1,12 @@
-import os
+
 from time import sleep 
 
-from modulos.functions import cadastrar_produto, listar_produto, atualizar_produto, remover_produto
-from modulos.utils import limpartela, saudacao, print_opcoes, final_programa 
-from database import carregar
+from src.estoque import Estoque
+from src.utils import limpartela, saudacao, print_opcoes, final_programa, mostrar_produto
 
 
 # Carrega os dados do arquivo json
-database = carregar()
+estoque = Estoque()
 
 # loop principal que controla o menu do sistema.
 while True:
@@ -36,21 +35,40 @@ while True:
 
 
     if escolha == 1:
-        cadastrar_produto(database)
+        nome = input("Digite o produto: ").upper()
+        try:
+            quantidade = float(input("Digite a quantidade: "))
+        except ValueError:
+            print("Digite somente numeros para a quantidade.")
+            sleep(2)
+            continue
+        estoque.cadastrar_produto(nome, quantidade)
 
 
     elif escolha == 2:
-        listar_produto(database)
-
+        estoque.listar_produto()
+        
 
     elif escolha == 3:
-        atualizar_produto(database)
+        mostrar_produto()
+
+        # solicita o ID do produto que sera atualizado
+        id_produto = input('Digite o ID do produto para atualizar: ')
+       
+
+        estoque.atualizar_produto(id_produto)
 
 
     elif escolha == 4:
-        remover_produto(database)
+        mostrar_produto()
 
-# exibe uma mensagem de fechamento.
+        # solicita o ID do produto a ser removido
+        id_produto = input('digite o ID do produto a remover. ')
+
+        estoque.remover_produto(id_produto)
+
+
+    # exibe uma mensagem de fechamento.
     else:
         final_programa()
         break
